@@ -5,7 +5,7 @@ using Template.Domain.Entities;
 
 namespace Template.Infrastructure.Interfaces
 {
-    public interface IUserRepository
+    public interface IUserRepository : IRepository<User>
     {
         IEnumerable<User> GetAll();
     }

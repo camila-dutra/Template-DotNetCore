@@ -8,5 +8,6 @@ namespace Template.Service.Interfaces
     public interface IUserService
     {
         List<UserDTO> Get();
+        bool Post(UserDTO user);
     }
 }

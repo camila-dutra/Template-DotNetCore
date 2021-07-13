@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Template.Service.DTOs;
 using Template.Service.Interfaces;
 
 namespace Template.Controllers
@@ -14,7 +15,7 @@ namespace Template.Controllers
     {
         private readonly IUserService userService;
 
-        public UsersController(IUserService userService)  //Dependency Injection
+        public UsersController(IUserService userService) //Dependency Injection
         {
             this.userService = userService;
         }
@@ -23,6 +24,12 @@ namespace Template.Controllers
         public IActionResult Get()
         {
             return Ok(this.userService.Get());
+        }
+
+        [HttpPost]
+        public IActionResult Post(UserDTO user)
+        {
+            return Ok(this.userService.Post(user));
         }
     }
 }
