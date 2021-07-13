@@ -1,10 +1,14 @@
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Template.Infrastructure.Context;
+using Pomelo.EntityFrameworkCore.MySql;
+using Microsoft.EntityFrameworkCore;
+using MySqlConnector;
 
 namespace Template
 {
@@ -21,12 +25,21 @@ namespace Template
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            //adding new connection to database
+            string dbConnectionString = Configuration.GetConnectionString("DefaultConnection");
+
+            services.AddDbContext<TemplateContext>(opt => opt.UseMySql(dbConnectionString, ServerVersion.AutoDetect(dbConnectionString)).EnableSensitiveDataLogging());
+
+            services.AddControllers();
+
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/dist";
             });
         }
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
