@@ -9,6 +9,7 @@ using Template.Infrastructure.Context;
 using Pomelo.EntityFrameworkCore.MySql;
 using Microsoft.EntityFrameworkCore;
 using MySqlConnector;
+using Template.Service.DependencyInjection;
 
 namespace Template
 {
@@ -31,7 +32,9 @@ namespace Template
 
             services.AddDbContext<TemplateContext>(opt => opt.UseMySql(dbConnectionString, ServerVersion.AutoDetect(dbConnectionString)).EnableSensitiveDataLogging());
 
-            services.AddControllers();
+            NativeInjector.RegisterServices(services);
+
+            //services.AddControllers();
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>

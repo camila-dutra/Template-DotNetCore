@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Template.Infrastructure.Context;
 
 namespace Template.Infrastructure.Migrations
 {
     [DbContext(typeof(TemplateContext))]
-    partial class TemplateContextModelSnapshot : ModelSnapshot
+    [Migration("20210713160219_common fields")]
+    partial class commonfields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -26,8 +28,8 @@ namespace Template.Infrastructure.Migrations
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<DateTime?>("DateUpdated")
-                        .HasColumnType("datetime(6)");
+                    b.Property<Guid>("DateUpdated")
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("Email")
                         .HasColumnType("longtext");
@@ -48,7 +50,8 @@ namespace Template.Infrastructure.Migrations
                         new
                         {
                             Id = new Guid("42e5f94c-6c88-472c-bfd5-00e79e0aa640"),
-                            DateCreated = new DateTime(2021, 7, 13, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateUpdated = new Guid("00000000-0000-0000-0000-000000000000"),
                             Email = "joao@template.com",
                             IsDeleted = false,
                             Name = "Joao da Silva"

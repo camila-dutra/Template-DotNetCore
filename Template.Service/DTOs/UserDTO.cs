@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Text;
-using Template.Domain.Models;
 
-namespace Template.Domain.Entities
+namespace Template.Service.DTOs
 {
-    public class User : Entity
+    public class UserDTO
     {
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
     }
