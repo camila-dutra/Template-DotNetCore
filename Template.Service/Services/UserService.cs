@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using AutoMapper;
 using Template.Domain.Entities;
@@ -30,11 +32,41 @@ namespace Template.Service.Services
 
         public bool Post(UserDTO user)
         {
-            User us = mapper.Map<User>(user);
+            User _user = mapper.Map<User>(user);
 
-            this.userRepository.Create(us);
+            this.userRepository.Create(_user);
 
             return true;
         }
+
+        public UserDTO GetById(string id)
+        {
+            if(!Guid.TryParse(id, out Guid userId))
+                throw new Exception("UserId is not valid");
+
+            List<User> users = this.userRepository.GetAll().ToList();
+            User _user = users.Find(x => x.Id == userId && !x.IsDeleted);
+            if (_user == null)
+                throw new Exception("User not found");
+
+
+
+            return mapper.Map<UserDTO>(_user);
+        }
+
+        public bool Put(UserDTO user)
+        {
+            List<User> users = this.userRepository.GetAll().ToList();
+            User _user = users.Find(x => x.Id == user.Id && !x.IsDeleted);
+            if (_user == null)
+                throw new Exception("User not found");
+
+            _user = mapper.Map<User>(user);
+
+            this.userRepository.Update(_user);
+
+            return true;
+        }
+
     }
 }

@@ -9,6 +9,7 @@ using Template.Infrastructure.Context;
 using Pomelo.EntityFrameworkCore.MySql;
 using Microsoft.EntityFrameworkCore;
 using MySqlConnector;
+using Template.Infrastructure.Swagger;
 using Template.Service.AutoMapper;
 using Template.Service.DependencyInjection;
 
@@ -36,6 +37,7 @@ namespace Template
             NativeInjector.RegisterServices(services);
 
             services.AddAutoMapper(typeof(AutoMapperSetup));
+            services.AddSwaggerConfiguration();
 
             //services.AddControllers();
 
@@ -60,6 +62,8 @@ namespace Template
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseSwaggerConfiguration();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

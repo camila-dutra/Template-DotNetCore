@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 using Template.Domain.Entities;
 using Template.Infrastructure.Context;
 using Template.Infrastructure.Interfaces;
@@ -13,7 +14,7 @@ namespace Template.Infrastructure.Repositories
 
         public IEnumerable<User> GetAll()
         {
-            return Query(x => !x.IsDeleted);
+            return Query(x => !x.IsDeleted).AsNoTracking();
         }
     }
 }

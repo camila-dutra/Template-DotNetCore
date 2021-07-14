@@ -31,5 +31,17 @@ namespace Template.Controllers
         {
             return Ok(this.userService.Post(user));
         }
+
+        [HttpGet("{id}")]
+        public IActionResult GetById(string id)
+        {
+            return Ok(this.userService.GetById(id));
+        }
+
+        [HttpPut]
+        public IActionResult Put(UserDTO user)
+        {
+            return Ok(this.userService.Put(user));
+        }
     }
 }
