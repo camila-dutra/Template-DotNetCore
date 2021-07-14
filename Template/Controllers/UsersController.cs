@@ -4,13 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Template.Service.DTOs;
 using Template.Service.Interfaces;
 
 namespace Template.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    [ApiController, Authorize]
     public class UsersController : ControllerBase
     {
         private readonly IUserService userService;
@@ -42,6 +43,18 @@ namespace Template.Controllers
         public IActionResult Put(UserDTO user)
         {
             return Ok(this.userService.Put(user));
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Put(string id)
+        {
+            return Ok(this.userService.Delete(id));
+        }
+
+        [HttpPost("authenticate"), AllowAnonymous]
+        public IActionResult Authenticate(UserAuthenticateRequestDTO user)
+        {
+            return Ok(this.userService.Authenticate(user));
         }
     }
 }

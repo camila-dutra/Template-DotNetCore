@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
@@ -8,7 +10,9 @@ using Microsoft.Extensions.Hosting;
 using Template.Infrastructure.Context;
 using Pomelo.EntityFrameworkCore.MySql;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using MySqlConnector;
+using Template.Infrastructure.Auth;
 using Template.Infrastructure.Swagger;
 using Template.Service.AutoMapper;
 using Template.Service.DependencyInjection;
@@ -38,6 +42,24 @@ namespace Template
 
             services.AddAutoMapper(typeof(AutoMapperSetup));
             services.AddSwaggerConfiguration();
+
+            var key = Encoding.ASCII.GetBytes(Settings.Secret);
+            services.AddAuthentication(x =>
+                                       {
+                                           x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                                           x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                                       }).AddJwtBearer(x =>
+                                                       {
+                                                           x.RequireHttpsMetadata = false;
+                                                           x.SaveToken = true;
+                                                           x.TokenValidationParameters = new TokenValidationParameters
+                                                               {
+                                                                ValidateIssuerSigningKey = true,
+                                                                IssuerSigningKey = new SymmetricSecurityKey(key),
+                                                                ValidateIssuer = false,
+                                                                ValidateAudience = false
+                                                               };
+                                                       });
 
             //services.AddControllers();
 
@@ -73,6 +95,9 @@ namespace Template
             }
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

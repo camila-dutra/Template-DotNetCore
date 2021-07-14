@@ -5,6 +5,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using AutoMapper;
 using Template.Domain.Entities;
+using Template.Infrastructure.Auth;
 using Template.Infrastructure.Interfaces;
 using Template.Service.DTOs;
 using Template.Service.Interfaces;
@@ -66,6 +67,33 @@ namespace Template.Service.Services
             this.userRepository.Update(_user);
 
             return true;
+        }
+
+        public bool Delete(string id)
+        {
+            if (!Guid.TryParse(id, out Guid userId))
+                throw new Exception("UserId is not valid");
+
+            List<User> users = this.userRepository.GetAll().ToList();
+            User _user = users.Find(x => x.Id == userId && !x.IsDeleted);
+            if (_user == null)
+                throw new Exception("User not found");
+
+            _user.IsDeleted = true;
+            this.userRepository.Delete(_user);
+
+            return true;
+        }
+
+        public UserAuthenticateResponseDTO Authenticate(UserAuthenticateRequestDTO user)
+        {
+            List<User> users = this.userRepository.GetAll().ToList();
+            User _user = users.Find(x => !x.IsDeleted && x.Email.ToUpper() == user.Email.ToUpper());
+
+            if (_user == null)
+                throw new Exception("User not found");
+
+            return new UserAuthenticateResponseDTO(mapper.Map<UserDTO>(_user), TokenService.GenerateToken(_user));
         }
 
     }

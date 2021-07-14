@@ -9,7 +9,9 @@ namespace Template.Service.Interfaces
     {
         List<UserDTO> Get();
         bool Post(UserDTO user); 
-        UserDTO GetById(string id); 
+        UserDTO GetById(string id);
         bool Put(UserDTO user);
+        bool Delete(string id);
+        UserAuthenticateResponseDTO Authenticate(UserAuthenticateRequestDTO user);
     }
 }
