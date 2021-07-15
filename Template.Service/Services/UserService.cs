@@ -33,6 +33,9 @@ namespace Template.Service.Services
 
         public bool Post(UserDTO user)
         {
+            if (user.Id != Guid.Empty)
+                throw new Exception("UserId must be empty");
+
             User _user = mapper.Map<User>(user);
 
             this.userRepository.Create(_user);
@@ -43,7 +46,7 @@ namespace Template.Service.Services
         public UserDTO GetById(string id)
         {
             if(!Guid.TryParse(id, out Guid userId))
-                throw new Exception("UserId is not valid");
+                throw new Exception("UserID is not valid");
 
             List<User> users = this.userRepository.GetAll().ToList();
             User _user = users.Find(x => x.Id == userId && !x.IsDeleted);
@@ -57,8 +60,12 @@ namespace Template.Service.Services
 
         public bool Put(UserDTO user)
         {
+            if (user.Id == Guid.Empty)
+                throw new Exception("ID is invalid");
+
             List<User> users = this.userRepository.GetAll().ToList();
             User _user = users.Find(x => x.Id == user.Id && !x.IsDeleted);
+
             if (_user == null)
                 throw new Exception("User not found");
 
@@ -72,7 +79,7 @@ namespace Template.Service.Services
         public bool Delete(string id)
         {
             if (!Guid.TryParse(id, out Guid userId))
-                throw new Exception("UserId is not valid");
+                throw new Exception("UserID is not valid");
 
             List<User> users = this.userRepository.GetAll().ToList();
             User _user = users.Find(x => x.Id == userId && !x.IsDeleted);
@@ -87,6 +94,9 @@ namespace Template.Service.Services
 
         public UserAuthenticateResponseDTO Authenticate(UserAuthenticateRequestDTO user)
         {
+            if (string.IsNullOrEmpty(user.Email))
+                throw new Exception("Email/Password are required.");
+
             List<User> users = this.userRepository.GetAll().ToList();
             User _user = users.Find(x => !x.IsDeleted && x.Email.ToUpper() == user.Email.ToUpper());
 
