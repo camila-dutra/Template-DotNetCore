@@ -32,6 +32,9 @@ namespace Template.Controllers
         [HttpPost, AllowAnonymous]
         public IActionResult Post(UserDTO user)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             return Ok(this.userService.Post(user));
         }
 

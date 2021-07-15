@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -9,6 +10,7 @@ using Template.Infrastructure.Auth;
 using Template.Infrastructure.Interfaces;
 using Template.Service.DTOs;
 using Template.Service.Interfaces;
+using ValidationContext = System.ComponentModel.DataAnnotations.ValidationContext;
 
 namespace Template.Service.Services
 {
@@ -35,6 +37,8 @@ namespace Template.Service.Services
         {
             if (user.Id != Guid.Empty)
                 throw new Exception("UserId must be empty");
+
+            Validator.ValidateObject(user, new ValidationContext(user), true);
 
             User _user = mapper.Map<User>(user);
 

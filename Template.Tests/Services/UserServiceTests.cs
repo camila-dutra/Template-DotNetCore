@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 using AutoMapper;
 using Moq;
@@ -19,6 +20,8 @@ namespace Template.Tests.Services
         {
             userService = new UserService(new Mock<IUserRepository>().Object, new Mock<IMapper>().Object);
         }
+
+        #region ValidatingSendingID
 
         [Fact]
         public void Post_SendingValidID()
@@ -58,5 +61,27 @@ namespace Template.Tests.Services
             var exception = Assert.Throws<Exception>(() => userService.Authenticate(new UserAuthenticateRequestDTO()));
             Assert.Equal("Email/Password are required.", exception.Message);
         }
+        #endregion
+
+        #region ValidatingCorrectObject
+        [Fact]
+        public void Post_SendingValidObject()
+        {
+            var result = userService.Post(new UserDTO { Name = "Camila Martins", Email = "cmartinsdutra@gmail.com"});
+            Assert.True(result);
+        }
+
+        #endregion
+
+        #region ValidatingRequiredFields
+        [Fact]
+        public void Post_SendingInalidObject()
+        {
+            var exception = Assert.Throws<ValidationException>(() => userService.Post(new UserDTO { Name = "Camila Martins" }));
+            Assert.Equal("The Email field is required.", exception.Message);
+        }
+
+        #endregion
+
     }
 }
