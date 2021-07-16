@@ -4,7 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Text;
 using AutoMapper;
 using Moq;
+using Template.Domain.Entities;
 using Template.Infrastructure.Interfaces;
+using Template.Service.AutoMapper;
 using Template.Service.DTOs;
 using Template.Service.Services;
 using Xunit;
@@ -69,6 +71,24 @@ namespace Template.Tests.Services
         {
             var result = userService.Post(new UserDTO { Name = "Camila Martins", Email = "cmartinsdutra@gmail.com"});
             Assert.True(result);
+        }
+
+        [Fact]
+        public void Get_ValidatingObject()
+        {
+            List<User> users = new List<User>();
+            users.Add(new User{ Id = Guid.NewGuid(), Name = "Camila Martins Dutra", Email = "camila@gmail.com", DateCreated = DateTime.Now});
+
+            var userReposMock = new Mock<IUserRepository>();
+            userReposMock.Setup(x => x.GetAll()).Returns(users);
+
+            var autoMapperProfile = new AutoMapperSetup();
+            var configuration = new MapperConfiguration(x => x.AddProfile(autoMapperProfile));
+            IMapper mapperMock = new Mapper(configuration);
+
+            userService = new UserService(userReposMock.Object, mapperMock);
+            var result = userService.Get();
+            Assert.True(result.Count > 0);
         }
 
         #endregion
